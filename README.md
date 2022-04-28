@@ -10,7 +10,7 @@ How to run this project is simple you only just need have prerequisites tools to
 
 ### API Documentation
 
-It's included as Postman file on the root of project named `github-org.postman_collection.json`. You can import the file on your Postman / Insomnia client directly;
+It's included as Postman file on the root of project named `Notification Service.postman_collection.json`. You can import the file on your Postman / Insomnia client directly;
 
 ### Prerequisites
 
@@ -63,10 +63,6 @@ AUTH_TOKEN      # auth token that will be going used on API call/request
 
 ## Additional Information
 
-### Getting GITHUB_TOKEN
-
-To getting GitHub token, generate the token from [Token Settings](https://github.com/settings/tokens). You just allow for read access to organization, and user.
-
 ### Docker Build
 
 To build the image using docker:
@@ -76,7 +72,3 @@ docker build -t [image_name] .
 ```
 
 ### Troubleshooting
-
-#### Getting 401 even with correct token header
-
-Check your GitHub token if the token is already blocked or expired by GitHub itself.
