@@ -50,8 +50,6 @@ Available environment variable that used by this service
 
 ```bash
 NODE_ENV        # node environment e.g: development / production / local
-GITHUB_TOKEN    # github personal token generated from github app
-GITHUB_API_URL  # github API base url
 
 DB_HOST         # database host, default: localhost
 DB_NAME         # database name
