@@ -63,6 +63,10 @@ AUTH_TOKEN      # auth token that will be going used on API call/request
 
 ## Additional Information
 
+### API Documentation
+
+https://documenter.getpostman.com/view/1522052/UyrEhEmx
+
 ### Docker Build
 
 To build the image using docker:
