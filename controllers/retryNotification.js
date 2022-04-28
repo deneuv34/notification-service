@@ -1,7 +1,9 @@
+const moment = require("moment");
 const { ERROR_URL_NOT_FOUND } = require("../lib/const");
 const logger = require("../lib/logger");
 const MerchantNotifURLs = require("../models/merchantNotifURLs");
 const Notifications = require("../models/notifications");
+const Partners = require("../models/partners");
 const sendNotifToMerchant = require("../services/notifications/sendNotifToMerchant");
 
 const retryNotification = async (req, res, next) => {
@@ -10,15 +12,17 @@ const retryNotification = async (req, res, next) => {
   try {
     const notification = await Notifications.findOne({ where: { id: notificationId } })
     if (!notification) return res.status(400).json({ error: "Invalid notification id" });
-    const merchantUrl = await MerchantNotifURLs.findOne({
-      where:  { bussiness_id: notification.bussiness_id }
+
+    const partner = await Partners.findOne({ where: { business_id: notification.business_id } })
+    const merchant = await MerchantNotifURLs.findOne({
+      where:  { merchant_id: partner.merchant_id }
     });
 
-    if (!merchantUrl) return res.status(400).json({ error: ERROR_URL_NOT_FOUND });
-
+    if (!merchant) return res.status(400).json({ error: ERROR_URL_NOT_FOUND });
 
     if (notification) {
-      sendNotifToMerchant(notification)
+      Notifications.update({ retry_at: moment().utc().toDate() }, { where: { id: notificationId } })
+      sendNotifToMerchant(notification, merchant.merchant_url)
     }
 
     res.status(200).json({
@@ -26,8 +30,7 @@ const retryNotification = async (req, res, next) => {
     })
   } catch (err) {
     logger.error(`couldn't send the notification for notification id #${notificationId}: ${err.message}`)
-    if (err === ERROR_URL_NOT_FOUND) return res.status(404).json({ error: ERROR_URL_NOT_FOUND });
-    next(err);
+    if (err === ERROR_URL_NOT_FOUND) res.status(404).json({ error: ERROR_URL_NOT_FOUND });
   }
 }
 

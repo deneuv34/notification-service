@@ -9,7 +9,7 @@ const sendNotifToMerchant = require("./sendNotifToMerchant")
 // return [data: Notifications, created: boolean]
 const createNotification = async (data) => {
   try {
-    const notifUrl = await MerchantNotifURLs.findOne({ where: { business_id: data.business_id }});
+    const notifUrl = await MerchantNotifURLs.findOne({ where: { merchant_id: data.merchant_id }});
     if (!notifUrl) throw new Error(ERROR_URL_NOT_FOUND)
     const notifData = await Notifications.create({
       business_id: data.business_id,
@@ -21,6 +21,7 @@ const createNotification = async (data) => {
     })
 
     sendNotifToMerchant(notifData, notifUrl.merchant_url)
+    
 
     return notifData;
   } catch (error) {logger.error(`Couldn't create the notification data for payment id #${data.partner_trx_id}, ${JSON.stringify(error)}`)

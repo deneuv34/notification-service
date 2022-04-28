@@ -2,7 +2,7 @@ const getNotificationByBussinessId = require("../services/notifications/getNotif
 
 const getNotifications = async (req, res, next) => {
   try {
-    const notifications = await getNotificationByBussinessId(req.params.bussinessId);
+    const notifications = await getNotificationByBussinessId(req.params.businessId);
 
     res.status(200).json(notifications)
   } catch (error) {

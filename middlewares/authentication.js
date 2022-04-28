@@ -7,10 +7,7 @@ const authentication = async (req, res, next) => {
     const token = req.headers['x-api-key'];
   
     if (!token) return res.status(401).json({ error: "Unauthorized" });
-    const keyData = await AuthKeys.findOne({ where: { key: token } });
-
-    if (!keyData) return res.status(401).json({ error: "Unauthorized" });
-    const validToken = token === keyData.key
+    const validToken = token === process.env.AUTH_TOKEN
   
     if (!validToken) return res.status(401).json({ error: "Unauthorized" });
     next();

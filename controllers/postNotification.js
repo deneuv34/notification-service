@@ -9,7 +9,7 @@ const postNotification = async (req, res) => {
   try {
     const transaction = await findPartnerTransaction({
       business_id: body.virtual_account_number,
-      transaction_id: body.transaction_id,
+      partner_trx_id: body.partner_trx_id,
     })
 
     if (!transaction) res.status(400).json({
@@ -22,11 +22,12 @@ const postNotification = async (req, res) => {
       merchant_end_customer_id: transaction.merchant_end_customer_id,
       partner_trx_id: body.partner_trx_id,
       amount: body.amount,
+      merchant_id: transaction.merchant_id,
     }
   
     const data = await createNotification(payload);
 
-    return res.status(200).json({ 
+    res.status(201).json({ 
       message: 'Notification has been sent and created successfully',
       data
     })

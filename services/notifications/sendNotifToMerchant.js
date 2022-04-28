@@ -1,12 +1,20 @@
 const { default: axios } = require('axios');
+const moment = require('moment');
 const logger = require("../../lib/logger");
+const AuthKeys = require('../../models/auth_keys');
 const Notifications = require('../../models/notifications');
+const Partners = require('../../models/partners');
 
 
 const sendNotifToMerchant = async (data, notifUrl) => {
   try {
-    logger.info(`sending notification to URL #${notifURL} with payload: ${JSON.stringify(data)}`)
-    await axios.post(notifUrl, data, { timeout: 10000 });
+    logger.info(`sending notification to URL #${notifUrl} with payload: ${JSON.stringify(data)}`)
+    
+    const merchant = await Partners.findOne({ where: { business_id: data.business_id } });
+    const authKey = await AuthKeys.findOne({ where: { merchant_id: merchant.merchant_id }});
+    await axios.post(notifUrl, data, {
+      timeout: 10000, headers: { apiKey: authKey.key } 
+    });
     await Notifications.update({
       notified_at: moment().utc().toDate()
     }, {
