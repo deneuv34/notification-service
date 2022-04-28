@@ -12,8 +12,13 @@ const sendNotifToMerchant = async (data, notifUrl) => {
     
     const merchant = await Partners.findOne({ where: { business_id: data.business_id } });
     const authKey = await AuthKeys.findOne({ where: { merchant_id: merchant.merchant_id }});
+    let headers = {};
+  
+    if (authKey) {
+      headers = { apiKey: authKey.key } 
+    }
     await axios.post(notifUrl, data, {
-      timeout: 10000, headers: { apiKey: authKey.key } 
+      timeout: 10000, headers
     });
     await Notifications.update({
       notified_at: moment().utc().toDate()
@@ -22,6 +27,7 @@ const sendNotifToMerchant = async (data, notifUrl) => {
         id: data.id,
       }
     })
+
     return true
   } catch (error) {
     logger.error(`send notification failed for payment id #${data.partner_trx_id} to merchant id #${data.merchant_end_customer_id} : ${error.message}`)

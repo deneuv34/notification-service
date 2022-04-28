@@ -28,5 +28,8 @@ describe('sendNotifToMerchant', () => {
       await sendNotifToMerchant(bussiness_id)
   
       expect(Notifications.update).toHaveBeenCalled()
+      expect(axios.post).toHaveBeenCalled()
+      expect(AuthKeys.findOne).toHaveBeenCalled()
+      expect(Partners.findOne).toHaveBeenCalled()
     })
 })
